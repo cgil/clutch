@@ -40,7 +40,8 @@
       "platform": "ios",
       "version": "",
       "locator": "ios"
-    }
+    },
+    "android"
   ],
   "name": "clutch",
   "description": "clutch: An Ionic project"
