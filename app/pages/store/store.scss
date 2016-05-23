@@ -1,3 +1,37 @@
 .store {
-
+    .item {
+        -webkit-box-shadow: 0 8px 6px -6px #999;
+        -moz-box-shadow: 0 8px 6px -6px #999;
+        box-shadow: 0 8px 6px -6px #999;
+        margin-bottom: 9px;
+        border-top: 0.2px outset !important;
+        border-bottom: 0.2px outset !important;
+    }
+    ion-thumbnail {
+        min-height: 8.6rem;;
+        min-width: 8.6rem;;
+        img {
+            min-height: 8.6rem;;
+            min-width: 8.6rem;;
+        }
+    }
+    h2, p {
+        padding-left: 25px;
+    }
+    .quantity {
+        padding: 0;
+        align-items: center;
+        -webkit-align-items: center;
+        display: flex;
+        display: -webkit-flex;
+        margin: 0 12px 0 12px;
+        font-size: 2.0rem;
+    }
+    .price {
+        padding: 0;
+        font-size: 2.0rem;
+    }
+    .checkout {
+        margin-bottom: 32px;
+    }
 }

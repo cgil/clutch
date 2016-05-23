@@ -17,7 +17,7 @@ export class StorePage {
   constructor(nav) {
     this.nav = nav;
     this.products = [];
-    for (let i = 1; i < 10; i++) {
+    for (let i = 1; i < 4; i++) {
         this.products.push({
             id: 'uuid_' + i,
             name: 'Body Solid Dumbbells ' + i,

@@ -8,37 +8,31 @@
     <ion-title>Tote Store</ion-title>
 </ion-navbar>
 
-<ion-content padding class="store">
-    <ion-card *ngFor="let product of products">
-        <ion-card-content>
+<ion-content class="store">
+    <ion-list no-lines>
+        <ion-item *ngFor="let product of products">
+            <ion-thumbnail item-left>
+                <img [src]="product.picture">
+            </ion-thumbnail>
+            <h2>{{product.name}}</h2>
+            <p>{{product.description}}</p>
             <ion-grid>
                 <ion-row>
-                    <ion-col width-33>
-                        <img src="{{product.picture}}"/>
-                    </ion-col>
-                    <ion-col width-67>
-                        <ion-card-title>
-                            {{product.name}}
-                        </ion-card-title>
-                        <h2>{{product.description}}</h2>
-                        <ion-row>
-                            <button clear>
-                                  <ion-icon name="remove-circle"></ion-icon>
-                            </button>
-                            <h4>10</h4>
-                            <button clear>
-                                  <ion-icon name="add-circle"></ion-icon>
-                            </button>
-                        </ion-row>
-                    </ion-col>
+                    <button large clear secondary>
+                          <ion-icon name="remove-circle"></ion-icon>
+                    </button>
+                    <p class="quantity">10</p>
+                    <button large clear secondary>
+                          <ion-icon name="add-circle"></ion-icon>
+                    </button>
                 </ion-row>
                 <ion-row baseline>
-                    <ion-col offset-90>
-                        <h2>${{product.price}}</h2>
+                    <ion-col offset-75>
+                        <p class="price" text-right>${{product.price}}</p>
                     </ion-col>
                 </ion-row>
             </ion-grid>
-        </ion-card-content>
-    </ion-card>
-  <button block>Checkout</button>
+        </ion-item>
+    </ion-list>
+  <button block large class="checkout">Checkout</button>
 </ion-content>
