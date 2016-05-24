@@ -60,12 +60,6 @@ var _ionicAngular = require('ionic-angular');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/*
-  Generated class for the StorePage page.
-
-  See http://ionicframework.com/docs/v2/components/#navigation for more info on
-  Ionic pages and navigation.
-*/
 var StorePage = exports.StorePage = (_dec = (0, _ionicAngular.Page)({
   templateUrl: 'build/pages/store/store.html'
 }), _dec(_class = function () {

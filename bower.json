@@ -1,0 +1,21 @@
+{
+  "name": "clutch",
+  "description": "clutch: Embedded Tote Stores",
+  "main": "",
+  "authors": [
+    "Carlos Gil <carlos@uber.com>"
+  ],
+  "homepage": "https://github.com/cgil/clutch",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "www/lib",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-payments": "*"
+  }
+}
