@@ -1,4 +1,5 @@
 import {Page, NavController} from 'ionic-angular';
+import {ConfirmationPage} from '../confirmation/confirmation';
 
 /*
   Generated class for the StorePage page.
@@ -27,4 +28,7 @@ export class StorePage {
         });
     }
   }
+    navigate() {
+        this.nav.push(ConfirmationPage);
+    }
 }
