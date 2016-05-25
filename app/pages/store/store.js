@@ -31,4 +31,13 @@ export class StorePage {
     navigate() {
         this.nav.push(ConfirmationPage);
     }
+
+    callNativeApp() {
+      console.log('call native app');
+        try {
+            webkit.messageHandlers.callbackHandler.postMessage("Hello from JavaScript");
+        } catch(err) {
+            console.log('The native context does not exist yet');
+        }
+    }
 }
