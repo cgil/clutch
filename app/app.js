@@ -1,11 +1,13 @@
 import {App, Platform} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {StorePage} from './pages/store/store';
+import {StoreService} from './providers/store-service/store-service';
 
 
 @App({
   template: '<ion-nav [root]="rootPage"></ion-nav>',
-  config: {} // http://ionicframework.com/docs/v2/api/config/Config/
+  config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
+  providers: [StoreService]
 })
 export class MyApp {
   static get parameters() {

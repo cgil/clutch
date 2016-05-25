@@ -1,4 +1,5 @@
 import {Page, NavController} from 'ionic-angular';
+import {StoreService} from '../../providers/store-service/store-service';
 
 
 @Page({
@@ -21,9 +22,11 @@ export class StorePage {
       e.preventDefault();
     }
 
-    constructor(nav) {
+
+
+    constructor(nav, storeService) {
         this.nav = nav;
-        this.products = [];
+        this.products = storeService.load();
         for (let i = 1; i < 4; i++) {
             this.products.push({
                 id: 'uuid_' + i,
