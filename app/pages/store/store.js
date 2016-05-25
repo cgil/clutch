@@ -9,6 +9,7 @@ export class StorePage {
     return [[NavController]];
   }
     openStripe(e) {
+        // Opens Stripe checkout.
         this.stripeHandler.open({
             name: 'Tote Store',
             description: 'Thank you',
