@@ -16,7 +16,7 @@ export class StoreService {
     }
 
     getAllProducts() {
-        return this.http.get('http://www.totestore.com/products/')
+        return this.http.get('//www.totestore.com/products/')
             .map(res => res.json())
             .map(data => data['data'])
             .map(products => {
