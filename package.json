@@ -54,6 +54,6 @@
   },
   "scripts": {
     "postinstall": "bower install && gulp build",
-    "start": "npm install"
+    "start": "node web.js"
   }
 }
