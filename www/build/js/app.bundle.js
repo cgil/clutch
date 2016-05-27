@@ -252,7 +252,7 @@ var StoreService = exports.StoreService = (_dec = (0, _core.Injectable)(), _dec(
     _createClass(StoreService, [{
         key: 'getAllProducts',
         value: function getAllProducts() {
-            return this.http.get('//www.totestore.com/products/').map(function (res) {
+            return this.http.get('//trie.herokuapp.com/products/').map(function (res) {
                 return res.json();
             }).map(function (data) {
                 return data['data'];

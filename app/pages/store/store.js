@@ -42,7 +42,7 @@ export class StorePage {
             description: 'Thank you',
             zipCode: true,
             amount: this.productsList.getTotalPriceInCents(),
-            shippingAddress: true,
+            shippingAddress: false,
             locale: 'auto'
         });
     }
