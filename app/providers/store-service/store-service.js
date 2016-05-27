@@ -3,6 +3,7 @@ import {Http} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {ProductModel} from '../../models/product-model';
+import {ProductsListModel} from '../../models/products-list-model';
 
 @Injectable()
 export class StoreService {
@@ -19,13 +20,13 @@ export class StoreService {
             .map(res => res.json())
             .map(data => data['data'])
             .map(products => {
-                let results = [];
+                let allProducts = [];
                 if (products) {
                     products.forEach((product) => {
-                        results.push(new ProductModel(product));
+                        allProducts.push(new ProductModel(product));
                     })
                 }
-                return results;
+                return new ProductsListModel(allProducts);
             })
     }
 }

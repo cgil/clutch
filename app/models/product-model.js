@@ -5,7 +5,7 @@ export class ProductModel {
         this.attributes = {};
         this.attributes.title = product_data.attributes.title;
         this.attributes.description = product_data.attributes.description;
-        this.attributes.price = product_data.attributes.price;
+        this.attributes.price = parseInt(product_data.attributes.price.replace('.', ''));
         this.attributes.image = product_data.attributes.image;
 
         // Private, not part of the product data.

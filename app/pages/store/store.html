@@ -1,6 +1,6 @@
 <ion-content class="store">
     <ion-list no-lines>
-        <ion-item *ngFor="let product of products">
+        <ion-item *ngFor="let product of productsList.products">
             <ion-thumbnail item-left>
                 <img [src]="product.attributes.image">
             </ion-thumbnail>
@@ -18,7 +18,9 @@
                 </ion-row>
                 <ion-row baseline>
                     <ion-col offset-75>
-                        <p class="price" text-right>${{product.attributes.price}}</p>
+                        <p class="price" text-right>
+                            {{product.attributes.price / 100 | currency: 'USD':true:'1.2-2'}}
+                        </p>
                     </ion-col>
                 </ion-row>
             </ion-grid>

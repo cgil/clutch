@@ -1,5 +1,6 @@
 import {Page, NavController} from 'ionic-angular';
 import {StoreService} from '../../providers/store-service/store-service';
+import {ProductsListModel} from '../../models/products-list-model';
 
 
 @Page({
@@ -14,6 +15,7 @@ export class StorePage {
     constructor(nav, storeService) {
         this.nav = nav;
         this.storeService = storeService;
+        this.productsList = new ProductsListModel();
 
         // Configure Stripe Checkout.
         this.stripeHandler = StripeCheckout.configure({
@@ -29,21 +31,20 @@ export class StorePage {
 
     ngOnInit() {
         this.storeService.getAllProducts().subscribe(
-            products => { this.products = products}
+            productsList => { this.productsList = productsList}
         );
     }
 
-    openStripe(e) {
+    openStripe() {
         // Opens Stripe checkout.
         this.stripeHandler.open({
             name: 'Tote Store',
             description: 'Thank you',
             zipCode: true,
-            amount: 2000,
-            shippingAddress: true,
+            amount: this.productsList.getTotalPriceInCents(),
+            shippingAddress: false,
             locale: 'auto'
         });
-      e.preventDefault();
     }
 
     addToBasket(product) {
