@@ -1,0 +1,6 @@
+{
+    "name": "clutch",
+    "description": "clutch: in-app stores.",
+    "repository": "https://github.com/cgil/clutch",
+    "keywords": ["node", "express", "ionic", "clutch"]
+}
