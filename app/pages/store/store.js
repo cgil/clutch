@@ -22,20 +22,12 @@ export class StorePage {
       e.preventDefault();
     }
 
-
-
     constructor(nav, storeService) {
         this.nav = nav;
-        this.products = storeService.load();
-        for (let i = 1; i < 4; i++) {
-            this.products.push({
-                id: 'uuid_' + i,
-                name: 'Body Solid Dumbbells ' + i,
-                description: 'Add weight to your next workout! ' + i,
-                picture: '/img/product-picture-placeholder.png',
-                price: i
-            });
-        }
+        this.products = storeService.loadAll();
+        console.log(this.products);
+
+        // Configure Stripe Checkout.
         this.stripeHandler = StripeCheckout.configure({
             key: 'pk_test_SSTmhE8aocfnGsmEZrN9SEAM',
             image: 'img/logo-blue.png',
