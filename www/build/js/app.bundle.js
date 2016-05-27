@@ -190,7 +190,7 @@ var StorePage = exports.StorePage = (_dec = (0, _ionicAngular.Page)({
                 description: 'Thank you',
                 zipCode: true,
                 amount: this.productsList.getTotalPriceInCents(),
-                shippingAddress: false,
+                shippingAddress: true,
                 locale: 'auto'
             });
         }
