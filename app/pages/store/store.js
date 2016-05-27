@@ -6,9 +6,33 @@ import {StoreService} from '../../providers/store-service/store-service';
   templateUrl: 'build/pages/store/store.html',
 })
 export class StorePage {
-  static get parameters() {
-    return [[NavController]];
-  }
+
+    static get parameters() {
+        return [[NavController], [StoreService]];
+    }
+
+    constructor(nav, storeService) {
+        this.nav = nav;
+        this.storeService = storeService;
+
+        // Configure Stripe Checkout.
+        this.stripeHandler = StripeCheckout.configure({
+            key: 'pk_test_SSTmhE8aocfnGsmEZrN9SEAM',
+            image: 'img/logo-blue.png',
+            locale: 'auto',
+            token: function(token) {
+                // You can access the token ID with `token.id`.
+                // Get the token ID to your server-side code for use.
+            }
+        });
+    }
+
+    ngOnInit() {
+        this.storeService.getAllProducts().subscribe(
+            products => { this.products = products}
+        );
+    }
+
     openStripe(e) {
         // Opens Stripe checkout.
         this.stripeHandler.open({
@@ -22,20 +46,11 @@ export class StorePage {
       e.preventDefault();
     }
 
-    constructor(nav, storeService) {
-        this.nav = nav;
-        this.products = storeService.loadAll();
-        console.log(this.products);
+    addToBasket(product) {
+        product.addQuantity();
+    }
 
-        // Configure Stripe Checkout.
-        this.stripeHandler = StripeCheckout.configure({
-            key: 'pk_test_SSTmhE8aocfnGsmEZrN9SEAM',
-            image: 'img/logo-blue.png',
-            locale: 'auto',
-            token: function(token) {
-                // You can access the token ID with `token.id`.
-                // Get the token ID to your server-side code for use.
-            }
-        });
+    removeFromBasket(product) {
+        product.subtractQuantity();
     }
 }

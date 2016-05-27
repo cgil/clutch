@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Http} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
+import {ProductModel} from '../../models/product-model';
 
 @Injectable()
 export class StoreService {
@@ -10,29 +12,21 @@ export class StoreService {
 
     constructor(http) {
         this.http = http;
-        this.data = null;
     }
 
-    loadAll() {
-        if (this.data) {
-            // already loaded data
-            return Promise.resolve(this.data);
-        }
-
-        // don't have the data yet
-        return new Promise(resolve => {
-            // We're using Angular Http provider to request the data,
-            // then on the response it'll map the JSON data to a parsed JS object.
-            // Next we process the data and resolve the promise with the new data.
-            this.http.get('http://127.0.0.1:5000/products/')
-                .map(res => res.json())
-                .subscribe(data => {
-                    // we've got back the raw data, now generate the core schedule data
-                    // and save the data for later reference
-                    this.data = data;
-                    resolve(this.data);
-            });
-        });
+    getAllProducts() {
+        return this.http.get('http://www.totestore.com/products/')
+            .map(res => res.json())
+            .map(data => data['data'])
+            .map(products => {
+                let results = [];
+                if (products) {
+                    products.forEach((product) => {
+                        results.push(new ProductModel(product));
+                    })
+                }
+                return results;
+            })
     }
 }
 
