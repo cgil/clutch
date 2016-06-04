@@ -1,6 +1,7 @@
 import {Page, NavController} from 'ionic-angular';
 import {StoreService} from '../../providers/store-service/store-service';
-import {ProductsListModel} from '../../models/products-list-model';
+import {StoreModel} from '../../models/store-model';
+import {Location} from '@angular/common';
 
 
 @Page({
@@ -9,30 +10,39 @@ import {ProductsListModel} from '../../models/products-list-model';
 export class StorePage {
 
     static get parameters() {
-        return [[NavController], [StoreService]];
+        return [[NavController], [StoreService], [Location]];
     }
 
-    constructor(nav, storeService) {
+    constructor(nav, storeService, location) {
         this.nav = nav;
         this.storeService = storeService;
-        this.productsList = new ProductsListModel();
+        this.store = new StoreModel({});
+        this.storeId = location.path().replace(/-|\//g, '');
 
         // Configure Stripe Checkout.
+        var self = this;
         this.stripeHandler = StripeCheckout.configure({
             key: 'pk_test_SSTmhE8aocfnGsmEZrN9SEAM',
             image: 'img/logo-blue.png',
             locale: 'auto',
-            token: function(token) {
-                // You can access the token ID with `token.id`.
-                // Get the token ID to your server-side code for use.
+            token: (token, addresses) => {
+                self.storeService.charge(
+                    token, addresses, self.store
+                ).subscribe(
+                    (err) => self.handleError
+                )
             }
         });
     }
 
     ngOnInit() {
-        this.storeService.getAllProducts().subscribe(
-            productsList => { this.productsList = productsList}
+        this.storeService.getStore(this.storeId).subscribe(
+            store => { this.store = store;}
         );
+    }
+
+    handleError(err) {
+        console.log(err);
     }
 
     openStripe() {
@@ -41,8 +51,9 @@ export class StorePage {
             name: 'Tote Store',
             description: 'Thank you',
             zipCode: true,
-            amount: this.productsList.getTotalPriceInCents(),
+            amount: this.store.getTotalPriceInCents(),
             shippingAddress: true,
+            billingAddress: true,
             locale: 'auto'
         });
     }

@@ -4,6 +4,24 @@ import {StorePage} from './pages/store/store';
 import {StoreService} from './providers/store-service/store-service';
 
 
+// This is a massive hack to get Stripe and Angular2 to place nice.
+// http://stackoverflow.com/questions/30873548/ambiguous-close-callback-on-stripe-checkout-api-with-loading-screen
+const _stringify = JSON.stringify;
+JSON.stringify = function (value, ...args) {
+  if (args.length) {
+    return _stringify(value, ...args);
+  } else {
+    return _stringify(value, function (key, value) {
+      if (value && key === 'zone' && value['_zoneDelegate']
+          && value['_zoneDelegate']['zone'] === value) {
+        return undefined;
+      }
+      return value;
+    });
+  }
+};
+
+
 @App({
   template: '<ion-nav [root]="rootPage"></ion-nav>',
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/

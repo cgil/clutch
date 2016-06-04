@@ -20,6 +20,26 @@ var _storeService = require('./providers/store-service/store-service');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+// This is a massive hack to get Stripe and Angular2 to place nice.
+// http://stackoverflow.com/questions/30873548/ambiguous-close-callback-on-stripe-checkout-api-with-loading-screen
+var _stringify = JSON.stringify;
+JSON.stringify = function (value) {
+  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    args[_key - 1] = arguments[_key];
+  }
+
+  if (args.length) {
+    return _stringify.apply(undefined, [value].concat(args));
+  } else {
+    return _stringify(value, function (key, value) {
+      if (value && key === 'zone' && value['_zoneDelegate'] && value['_zoneDelegate']['zone'] === value) {
+        return undefined;
+      }
+      return value;
+    });
+  }
+};
+
 var MyApp = exports.MyApp = (_dec = (0, _ionicAngular.App)({
   template: '<ion-nav [root]="rootPage"></ion-nav>',
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
@@ -92,25 +112,52 @@ var ProductModel = exports.ProductModel = function () {
 }();
 
 },{}],3:[function(require,module,exports){
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.StoreModel = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _productModel = require('./product-model');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ProductsListModel = exports.ProductsListModel = function () {
-    function ProductsListModel(products) {
-        _classCallCheck(this, ProductsListModel);
+var StoreModel = exports.StoreModel = function () {
+    function StoreModel(store) {
+        _classCallCheck(this, StoreModel);
 
-        this.products = products;
+        this.store = store;
+        this.products = this.constructProducts();
+        this.id = store.id;
     }
 
-    _createClass(ProductsListModel, [{
-        key: "getTotalPriceInCents",
+    _createClass(StoreModel, [{
+        key: 'constructProducts',
+        value: function constructProducts() {
+            var allProducts = [];
+            if (this.store.attributes) {
+                this.store.attributes.products.data.forEach(function (product) {
+                    allProducts.push(new _productModel.ProductModel(product));
+                });
+            }
+            return allProducts;
+        }
+    }, {
+        key: 'getBasket',
+        value: function getBasket() {
+            var basket = [];
+            this.products.forEach(function (product) {
+                if (product._quantity > 0) {
+                    basket.push(product);
+                }
+            });
+            return basket;
+        }
+    }, {
+        key: 'getTotalPriceInCents',
         value: function getTotalPriceInCents() {
             var total = 0;
             this.products.forEach(function (product) {
@@ -120,10 +167,10 @@ var ProductsListModel = exports.ProductsListModel = function () {
         }
     }]);
 
-    return ProductsListModel;
+    return StoreModel;
 }();
 
-},{}],4:[function(require,module,exports){
+},{"./product-model":2}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -139,7 +186,9 @@ var _ionicAngular = require('ionic-angular');
 
 var _storeService = require('../../providers/store-service/store-service');
 
-var _productsListModel = require('../../models/products-list-model');
+var _storeModel = require('../../models/store-model');
+
+var _common = require('@angular/common');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -149,25 +198,28 @@ var StorePage = exports.StorePage = (_dec = (0, _ionicAngular.Page)({
     _createClass(StorePage, null, [{
         key: 'parameters',
         get: function get() {
-            return [[_ionicAngular.NavController], [_storeService.StoreService]];
+            return [[_ionicAngular.NavController], [_storeService.StoreService], [_common.Location]];
         }
     }]);
 
-    function StorePage(nav, storeService) {
+    function StorePage(nav, storeService, location) {
         _classCallCheck(this, StorePage);
 
         this.nav = nav;
         this.storeService = storeService;
-        this.productsList = new _productsListModel.ProductsListModel();
+        this.store = new _storeModel.StoreModel({});
+        this.storeId = location.path().replace(/-|\//g, '');
 
         // Configure Stripe Checkout.
+        var self = this;
         this.stripeHandler = StripeCheckout.configure({
             key: 'pk_test_SSTmhE8aocfnGsmEZrN9SEAM',
             image: 'img/logo-blue.png',
             locale: 'auto',
-            token: function token(_token) {
-                // You can access the token ID with `token.id`.
-                // Get the token ID to your server-side code for use.
+            token: function token(_token, addresses) {
+                self.storeService.charge(_token, addresses, self.store).subscribe(function (err) {
+                    return self.handleError;
+                });
             }
         });
     }
@@ -177,9 +229,14 @@ var StorePage = exports.StorePage = (_dec = (0, _ionicAngular.Page)({
         value: function ngOnInit() {
             var _this = this;
 
-            this.storeService.getAllProducts().subscribe(function (productsList) {
-                _this.productsList = productsList;
+            this.storeService.getStore(this.storeId).subscribe(function (store) {
+                _this.store = store;
             });
+        }
+    }, {
+        key: 'handleError',
+        value: function handleError(err) {
+            console.log(err);
         }
     }, {
         key: 'openStripe',
@@ -189,8 +246,9 @@ var StorePage = exports.StorePage = (_dec = (0, _ionicAngular.Page)({
                 name: 'Tote Store',
                 description: 'Thank you',
                 zipCode: true,
-                amount: this.productsList.getTotalPriceInCents(),
+                amount: this.store.getTotalPriceInCents(),
                 shippingAddress: true,
+                billingAddress: true,
                 locale: 'auto'
             });
         }
@@ -209,7 +267,7 @@ var StorePage = exports.StorePage = (_dec = (0, _ionicAngular.Page)({
     return StorePage;
 }()) || _class);
 
-},{"../../models/products-list-model":3,"../../providers/store-service/store-service":5,"ionic-angular":387}],5:[function(require,module,exports){
+},{"../../models/store-model":3,"../../providers/store-service/store-service":5,"@angular/common":6,"ionic-angular":387}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -229,9 +287,7 @@ var _Observable = require('rxjs/Observable');
 
 require('rxjs/add/operator/map');
 
-var _productModel = require('../../models/product-model');
-
-var _productsListModel = require('../../models/products-list-model');
+var _storeModel = require('../../models/store-model');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -250,20 +306,32 @@ var StoreService = exports.StoreService = (_dec = (0, _core.Injectable)(), _dec(
     }
 
     _createClass(StoreService, [{
-        key: 'getAllProducts',
-        value: function getAllProducts() {
-            return this.http.get('//trie.herokuapp.com/products/').map(function (res) {
+        key: 'getStore',
+        value: function getStore(storeId) {
+            return this.http.get('//127.0.0.1:5000/stores/' + storeId).map(function (res) {
                 return res.json();
             }).map(function (data) {
                 return data['data'];
-            }).map(function (products) {
-                var allProducts = [];
-                if (products) {
-                    products.forEach(function (product) {
-                        allProducts.push(new _productModel.ProductModel(product));
-                    });
+            }).map(function (store) {
+                if (store.constructor === Array) {
+                    store = {};
                 }
-                return new _productsListModel.ProductsListModel(allProducts);
+                return new _storeModel.StoreModel(store);
+            });
+        }
+    }, {
+        key: 'charge',
+        value: function charge(token, addresses, store) {
+            var body = JSON.stringify({
+                'token': token,
+                'addresses': addresses,
+                'basket': store.getBasket(),
+                'storeId': store.id
+            });
+            var headers = new Headers({ 'Content-Type': 'application/json' });
+            var options = new _http.RequestOptions({ headers: headers });
+            return this.http.post('//127.0.0.1:5000/charges/', body, options).map(function (res) {
+                return res.json();
             });
         }
     }]);
@@ -271,7 +339,7 @@ var StoreService = exports.StoreService = (_dec = (0, _core.Injectable)(), _dec(
     return StoreService;
 }()) || _class);
 
-},{"../../models/product-model":2,"../../models/products-list-model":3,"@angular/core":138,"@angular/http":214,"rxjs/Observable":478,"rxjs/add/operator/map":484}],6:[function(require,module,exports){
+},{"../../models/store-model":3,"@angular/core":138,"@angular/http":214,"rxjs/Observable":478,"rxjs/add/operator/map":484}],6:[function(require,module,exports){
 "use strict";
 function __export(m) {
     for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];

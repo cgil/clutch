@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
-import {Http} from '@angular/http';
+import {Http, RequestOptions} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {ProductModel} from '../../models/product-model';
-import {ProductsListModel} from '../../models/products-list-model';
+import {StoreModel} from '../../models/store-model';
 
 @Injectable()
 export class StoreService {
@@ -15,19 +14,29 @@ export class StoreService {
         this.http = http;
     }
 
-    getAllProducts() {
-        return this.http.get('//trie.herokuapp.com/products/')
+    getStore(storeId) {
+        return this.http.get('//127.0.0.1:5000/stores/' + storeId)
             .map(res => res.json())
             .map(data => data['data'])
-            .map(products => {
-                let allProducts = [];
-                if (products) {
-                    products.forEach((product) => {
-                        allProducts.push(new ProductModel(product));
-                    })
+            .map(store => {
+                if (store.constructor === Array) {
+                    store = {};
                 }
-                return new ProductsListModel(allProducts);
+                return new StoreModel(store);
             })
+    }
+
+    charge(token, addresses, store) {
+        let body = JSON.stringify({
+            'token': token,
+            'addresses': addresses,
+            'basket': store.getBasket(),
+            'storeId': store.id
+        });
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post('//127.0.0.1:5000/charges/', body, options)
+            .map(res => res.json())
     }
 }
 
