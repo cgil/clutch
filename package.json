@@ -53,6 +53,6 @@
     "node": "6.2.0"
   },
   "scripts": {
-    "postinstall": "ionic build browser --minify"
+    "postinstall": "gulp build --minify --production"
   }
 }
