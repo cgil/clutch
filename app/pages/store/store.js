@@ -22,7 +22,7 @@ export class StorePage {
         // Configure Stripe Checkout.
         var self = this;
         this.stripeHandler = StripeCheckout.configure({
-            key: 'pk_test_SSTmhE8aocfnGsmEZrN9SEAM',
+            key: ToteConfig.stripePublishableKey,
             image: 'img/logo-blue.png',
             locale: 'auto',
             token: (token, addresses) => {

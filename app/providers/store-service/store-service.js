@@ -4,6 +4,7 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import {StoreModel} from '../../models/store-model';
 
+
 @Injectable()
 export class StoreService {
     static get parameters(){
@@ -12,11 +13,10 @@ export class StoreService {
 
     constructor(http) {
         this.http = http;
-        this.tote_api_url = 'www.totestore.com';
     }
 
     getStore(storeId) {
-        return this.http.get('//' + this.tote_api_url + '/stores/' + storeId)
+        return this.http.get('//' + ToteConfig.toteApiURL + '/stores/' + storeId)
             .map(res => res.json())
             .map(data => data['data'])
             .map(store => {

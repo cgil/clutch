@@ -27,7 +27,7 @@ JSON.stringify = function (value, ...args) {
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
   providers: [StoreService]
 })
-export class MyApp {
+export class ClutchApp {
   static get parameters() {
     return [[Platform]];
   }

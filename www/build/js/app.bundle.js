@@ -4,7 +4,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.MyApp = undefined;
+exports.ClutchApp = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -40,20 +40,20 @@ JSON.stringify = function (value) {
   }
 };
 
-var MyApp = exports.MyApp = (_dec = (0, _ionicAngular.App)({
+var ClutchApp = exports.ClutchApp = (_dec = (0, _ionicAngular.App)({
   template: '<ion-nav [root]="rootPage"></ion-nav>',
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
   providers: [_storeService.StoreService]
 }), _dec(_class = function () {
-  _createClass(MyApp, null, [{
+  _createClass(ClutchApp, null, [{
     key: 'parameters',
     get: function get() {
       return [[_ionicAngular.Platform]];
     }
   }]);
 
-  function MyApp(platform) {
-    _classCallCheck(this, MyApp);
+  function ClutchApp(platform) {
+    _classCallCheck(this, ClutchApp);
 
     this.rootPage = _store.StorePage;
 
@@ -64,7 +64,7 @@ var MyApp = exports.MyApp = (_dec = (0, _ionicAngular.App)({
     });
   }
 
-  return MyApp;
+  return ClutchApp;
 }()) || _class);
 
 },{"./pages/store/store":4,"./providers/store-service/store-service":5,"ionic-angular":387,"ionic-native":410}],2:[function(require,module,exports){
@@ -213,7 +213,7 @@ var StorePage = exports.StorePage = (_dec = (0, _ionicAngular.Page)({
         // Configure Stripe Checkout.
         var self = this;
         this.stripeHandler = StripeCheckout.configure({
-            key: 'pk_test_SSTmhE8aocfnGsmEZrN9SEAM',
+            key: ToteConfig.stripePublishableKey,
             image: 'img/logo-blue.png',
             locale: 'auto',
             token: function token(_token, addresses) {
@@ -303,13 +303,12 @@ var StoreService = exports.StoreService = (_dec = (0, _core.Injectable)(), _dec(
         _classCallCheck(this, StoreService);
 
         this.http = http;
-        this.tote_api_url = 'www.totestore.com';
     }
 
     _createClass(StoreService, [{
         key: 'getStore',
         value: function getStore(storeId) {
-            return this.http.get('//' + this.tote_api_url + '/stores/' + storeId).map(function (res) {
+            return this.http.get('//' + ToteConfig.toteApiURL + '/stores/' + storeId).map(function (res) {
                 return res.json();
             }).map(function (data) {
                 return data['data'];
