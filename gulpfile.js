@@ -3,6 +3,7 @@ var gulp = require('gulp'),
     del = require('del'),
     runSequence = require('run-sequence'),
     argv = process.argv;
+    preprocess = require('gulp-preprocess');
 
 
 /**
@@ -37,7 +38,7 @@ var isRelease = argv.indexOf('--release') > -1;
 
 gulp.task('watch', ['clean'], function(done){
   runSequence(
-    ['sass', 'html', 'fonts', 'scripts'],
+    ['preprocess-js', 'sass', 'html', 'fonts', 'scripts'],
     function(){
       gulpWatch('app/**/*.scss', function(){ gulp.start('sass'); });
       gulpWatch('app/**/*.html', function(){ gulp.start('html'); });
@@ -48,7 +49,7 @@ gulp.task('watch', ['clean'], function(done){
 
 gulp.task('build', ['clean'], function(done){
   runSequence(
-    ['sass', 'html', 'fonts', 'scripts'],
+    ['preprocess-js', 'sass', 'html', 'fonts', 'scripts'],
     function(){
       buildBrowserify({
         minify: isRelease,
@@ -69,4 +70,19 @@ gulp.task('fonts', copyFonts);
 gulp.task('scripts', copyScripts);
 gulp.task('clean', function(){
   return del('www/build');
+});
+
+gulp.task('preprocess-js', function(done) {
+    var env = 'development';
+    var isProduction = argv.indexOf('--production') > -1;
+    if (isProduction) {
+        env = 'production';
+    }
+    else if (process.env.NODE_ENV) {
+        env = process.env.NODE_ENV;
+    }
+    gulp.src('./config.js')
+        .pipe(preprocess({context: {ENVIRONMENT: env}}))
+        .pipe(gulp.dest('./www/build/js/'))
+        .on('end', done);
 });
