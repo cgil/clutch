@@ -16,6 +16,10 @@
     <!-- this Ionic's root component and where the app will load -->
     <ion-app></ion-app>
 
+    <!-- Stripe -->
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+
     <!-- config.js environment specific configuration -->
     <script src="build/js/config.js"></script>
     <!-- cordova.js required for cordova apps -->
@@ -28,9 +32,5 @@
 
     <!-- the bundle which is built from the app's source code -->
     <script src="build/js/app.bundle.js"></script>
-
-    <!-- Stripe -->
-    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-    <script src="https://checkout.stripe.com/checkout.js"></script>
 </body>
 </html>
