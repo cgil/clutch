@@ -53,6 +53,6 @@
     "node": "6.2.0"
   },
   "scripts": {
-    "postinstall": "gulp preprocess-js"
+    "postinstall": "gulp build browser"
   }
 }
