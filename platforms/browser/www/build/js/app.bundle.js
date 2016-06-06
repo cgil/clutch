@@ -18,7 +18,14 @@ var _store = require('./pages/store/store');
 
 var _storeService = require('./providers/store-service/store-service');
 
+var _core = require('@angular/core');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// Set up angular 2 prod mode if in production environment.
+if (ToteConfig.isProduction) {
+  (0, _core.enableProdMode)();
+}
 
 // This is a massive hack to get Stripe and Angular2 to place nice.
 // http://stackoverflow.com/questions/30873548/ambiguous-close-callback-on-stripe-checkout-api-with-loading-screen
@@ -43,7 +50,8 @@ JSON.stringify = function (value) {
 var ClutchApp = exports.ClutchApp = (_dec = (0, _ionicAngular.App)({
   template: '<ion-nav [root]="rootPage"></ion-nav>',
   config: {}, // http://ionicframework.com/docs/v2/api/config/Config/
-  providers: [_storeService.StoreService]
+  providers: [_storeService.StoreService],
+  prodMode: ToteConfig.isProduction
 }), _dec(_class = function () {
   _createClass(ClutchApp, null, [{
     key: 'parameters',
@@ -67,7 +75,7 @@ var ClutchApp = exports.ClutchApp = (_dec = (0, _ionicAngular.App)({
   return ClutchApp;
 }()) || _class);
 
-},{"./pages/store/store":4,"./providers/store-service/store-service":5,"ionic-angular":387,"ionic-native":410}],2:[function(require,module,exports){
+},{"./pages/store/store":4,"./providers/store-service/store-service":5,"@angular/core":138,"ionic-angular":387,"ionic-native":410}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
