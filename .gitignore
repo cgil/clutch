@@ -11,6 +11,7 @@ log.txt
 *.sublime-workspace
 .env
 www/build/
+platforms/
 
 .idea/
 .sass-cache/
