@@ -57,7 +57,7 @@ gulp.task('build', ['clean'], function(done){
           debug: !isRelease
         },
         uglifyOptions: {
-          mangle: false
+          mangle: isRelease
         }
       }).on('end', done);
     }
