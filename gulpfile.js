@@ -34,7 +34,7 @@ var copyHTML = require('ionic-gulp-html-copy');
 var copyFonts = require('ionic-gulp-fonts-copy');
 var copyScripts = require('ionic-gulp-scripts-copy');
 
-var isRelease = argv.indexOf('--release') > -1;
+var isRelease = argv.indexOf('--release') > -1 || process.env.NODE_ENV === 'production';
 
 gulp.task('watch', ['clean'], function(done){
   runSequence(
@@ -73,14 +73,7 @@ gulp.task('clean', function(){
 });
 
 gulp.task('preprocess-js', function(done) {
-    var env = 'development';
-    var isProduction = argv.indexOf('--production') > -1;
-    if (isProduction) {
-        env = 'production';
-    }
-    else if (process.env.NODE_ENV) {
-        env = process.env.NODE_ENV;
-    }
+    var env = isRelease ? 'production': 'development';
     gulp.src('./config.js')
         .pipe(preprocess({context: {ENVIRONMENT: env}}))
         .pipe(gulp.dest('./www/build/js/'))
