@@ -10,7 +10,11 @@ export class ProductModel {
 
         // Private, not part of the product data.
         this._quantity = 0;
-        this._shownPrice = this.attributes.price / 100;
+        let _shownPrice = (this.attributes.price / 100);
+        if (this.isFloat(_shownPrice)) {
+            _shownPrice = _shownPrice.toFixed(2);
+        }
+        this._shownPrice = _shownPrice;
     }
 
     addQuantity() {
@@ -21,5 +25,9 @@ export class ProductModel {
     subtractQuantity() {
         // Subtract quantity of items to purchase.
         this._quantity > 0 ? this._quantity-- : 0;
+    }
+
+    isFloat(n) {
+        return Number(n) === n && n % 1 !== 0;
     }
 }
