@@ -10,6 +10,7 @@ export class ProductModel {
 
         // Private, not part of the product data.
         this._quantity = 0;
+        this._shownPrice = this.attributes.price / 100;
     }
 
     addQuantity() {

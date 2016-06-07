@@ -5,7 +5,7 @@
                 <img [src]="product.attributes.image">
             </ion-thumbnail>
             <h2>{{product.attributes.title}}</h2>
-            <p>{{product.attributes.description}}</p>
+            <h3>{{product.attributes.description}}</h3>
             <ion-grid>
                 <ion-row>
                     <button large clear secondary (click)="removeFromBasket(product)">
@@ -17,9 +17,9 @@
                     </button>
                 </ion-row>
                 <ion-row baseline>
-                    <ion-col offset-75>
+                    <ion-col>
                         <p class="price" text-right>
-                            ${{product.attributes.price / 100}}
+                            ${{product._shownPrice}}
                         </p>
                     </ion-col>
                 </ion-row>
