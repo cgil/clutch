@@ -30,10 +30,14 @@ export class StorePage {
                 self.storeService.charge(
                     token, addresses, self.store
                 ).subscribe(
-                    (err) => self.handleError
+                    (data) => {
+                        this.goToConfirmationPage()
+                    },
+                    (err) => {
+                        self.handleError(err)
+                    }
                 )
-            },
-            closed: () => this.goToConfirmationPage()
+            }
         });
     }
 
