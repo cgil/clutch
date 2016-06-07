@@ -2,6 +2,7 @@ import {Page, NavController} from 'ionic-angular';
 import {StoreService} from '../../providers/store-service/store-service';
 import {StoreModel} from '../../models/store-model';
 import {Location} from '@angular/common';
+import {ConfirmationPage} from '../confirmation/confirmation';
 
 
 @Page({
@@ -23,7 +24,7 @@ export class StorePage {
         var self = this;
         this.stripeHandler = StripeCheckout.configure({
             key: ToteConfig.stripePublishableKey,
-            image: 'img/logo-blue.png',
+            image: 'https://s3.amazonaws.com/www.totestore.com/clutch/public/assets/logo-blue.png',
             locale: 'auto',
             token: (token, addresses) => {
                 self.storeService.charge(
@@ -31,7 +32,8 @@ export class StorePage {
                 ).subscribe(
                     (err) => self.handleError
                 )
-            }
+            },
+            closed: () => this.goToConfirmationPage()
         });
     }
 
@@ -46,16 +48,23 @@ export class StorePage {
     }
 
     openStripe() {
-        // Opens Stripe checkout.
-        this.stripeHandler.open({
-            name: 'Tote Store',
-            description: 'Thank you',
-            zipCode: true,
-            amount: this.store.getTotalPriceInCents(),
-            shippingAddress: true,
-            billingAddress: true,
-            locale: 'auto'
-        });
+        // Opens Stripe checkout. If we're purchasing something.
+        let amount = this.store.getTotalPriceInCents();
+        if (amount > 0) {
+            this.stripeHandler.open({
+                name: 'Tote Store',
+                description: 'Thank you',
+                zipCode: true,
+                amount: amount,
+                shippingAddress: true,
+                billingAddress: true,
+                locale: 'auto'
+            });
+        }
+    }
+
+    goToConfirmationPage() {
+        this.nav.push(ConfirmationPage);
     }
 
     addToBasket(product) {

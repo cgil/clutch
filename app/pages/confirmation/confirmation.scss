@@ -1,0 +1,9 @@
+.confirmation {
+    background-color: map-get($colors, primary);
+    h1, p {
+        color: white;
+    }
+    h1 {
+        font-size: 3.2rem;
+    }
+}
