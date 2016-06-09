@@ -31,23 +31,19 @@ export class StorePage {
             image: 'https://s3.amazonaws.com/www.totestore.com/clutch/public/assets/logo-blue.png',
             locale: 'auto',
             token: (token, addresses) => {
+                self.presentLoading();
                 self.storeService.charge(
                     token, addresses, self.store
                 ).subscribe(
                     (data) => {
+                        this.loading.dismiss()
                         this.goToConfirmationPage()
                     },
                     (err) => {
                         this.loading.dismiss()
                         self.handleError(err)
-                    },
-                    () => {
-                        this.loading.dismiss()
                     }
                 )
-            },
-            closed: () => {
-                self.presentLoading();
             }
         });
     }
