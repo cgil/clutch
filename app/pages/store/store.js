@@ -1,4 +1,4 @@
-import {Page, NavController} from 'ionic-angular';
+import {Page, NavController, Loading} from 'ionic-angular';
 import {StoreService} from '../../providers/store-service/store-service';
 import {StoreModel} from '../../models/store-model';
 import {Location} from '@angular/common';
@@ -20,6 +20,10 @@ export class StorePage {
         this.store = new StoreModel({});
         this.storeId = location.path().replace(/-|\//g, '');
 
+        this.loading = Loading.create({
+            content: "Please wait..."
+        });
+
         // Configure Stripe Checkout.
         var self = this;
         this.stripeHandler = StripeCheckout.configure({
@@ -34,9 +38,16 @@ export class StorePage {
                         this.goToConfirmationPage()
                     },
                     (err) => {
+                        this.loading.dismiss()
                         self.handleError(err)
+                    },
+                    () => {
+                        this.loading.dismiss()
                     }
                 )
+            },
+            closed: () => {
+                self.presentLoading();
             }
         });
     }
@@ -65,6 +76,10 @@ export class StorePage {
                 locale: 'auto'
             });
         }
+    }
+
+    presentLoading() {
+        this.nav.present(this.loading);
     }
 
     goToConfirmationPage() {
