@@ -48,8 +48,16 @@ export class StorePage {
     }
 
     onPageWillEnter() {
+        this.presentLoading();
         this.storeService.getStore(this.storeId).subscribe(
-            store => { this.store = store;}
+            (store) => {
+                this.store = store;
+                this.dismissLoading();
+            }
+            (err) => {
+                this.dismissLoading();
+                this.handleError(err);
+            }
         );
     }
 
