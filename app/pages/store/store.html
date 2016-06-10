@@ -1,4 +1,4 @@
-<ion-content class="store">
+<ion-content class="store" ng-if="dataLoaded">
     <ion-list no-lines>
         <ion-item text-wrap *ngFor="let product of store.products">
             <ion-thumbnail item-left>
