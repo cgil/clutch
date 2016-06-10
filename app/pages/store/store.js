@@ -25,7 +25,7 @@ export class StorePage {
         });
 
         // Configure Stripe Checkout.
-        self = this;
+        let self = this;
         this.stripeHandler = StripeCheckout.configure({
             key: ToteConfig.stripePublishableKey,
             image: 'https://s3.amazonaws.com/www.totestore.com/clutch/public/assets/logo-blue.png',
