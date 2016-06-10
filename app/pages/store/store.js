@@ -53,10 +53,10 @@ export class StorePage {
             (store) => {
                 this.store = store;
                 this.dismissLoading();
-            }
+            },
             (err) => {
-                this.dismissLoading();
                 this.handleError(err);
+                this.dismissLoading();
             }
         );
     }
