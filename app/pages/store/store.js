@@ -25,30 +25,29 @@ export class StorePage {
         });
 
         // Configure Stripe Checkout.
-        var self = this;
         this.stripeHandler = StripeCheckout.configure({
             key: ToteConfig.stripePublishableKey,
             image: 'https://s3.amazonaws.com/www.totestore.com/clutch/public/assets/logo-blue.png',
             locale: 'auto',
             token: (token, addresses) => {
-                self.presentLoading();
-                self.storeService.charge(
-                    token, addresses, self.store
+                this.presentLoading();
+                this.storeService.charge(
+                    token, addresses, this.store
                 ).subscribe(
                     (data) => {
-                        this.loading.dismiss()
-                        this.goToConfirmationPage()
+                        this.dismissLoading();
+                        this.goToConfirmationPage();
                     },
                     (err) => {
-                        this.loading.dismiss()
-                        self.handleError(err)
+                        this.dismissLoading();
+                        this.handleError(err);
                     }
                 )
             }
         });
     }
 
-    ngOnInit() {
+    onPageWillEnter() {
         this.storeService.getStore(this.storeId).subscribe(
             store => { this.store = store;}
         );
@@ -76,6 +75,10 @@ export class StorePage {
 
     presentLoading() {
         this.nav.present(this.loading);
+    }
+
+    dismissLoading() {
+        this.loading.dismiss();
     }
 
     goToConfirmationPage() {
