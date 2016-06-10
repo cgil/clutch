@@ -20,28 +20,24 @@ export class StorePage {
         this.store = new StoreModel({});
         this.storeId = location.path().replace(/-|\//g, '');
 
-        this.loading = Loading.create({
-            content: "Please wait..."
-        });
-
         // Configure Stripe Checkout.
-        let self = this;
+        var self = this;
         this.stripeHandler = StripeCheckout.configure({
             key: ToteConfig.stripePublishableKey,
             image: 'https://s3.amazonaws.com/www.totestore.com/clutch/public/assets/logo-blue.png',
             locale: 'auto',
             token: (token, addresses) => {
-                self.presentLoading();
+                let loading = self.presentLoading();
                 self.storeService.charge(
                     token, addresses, self.store
                 ).subscribe(
                     (data) => {
-                        self.dismissLoading();
-                        self.goToConfirmationPage();
+                        loading.dismiss()
+                        this.goToConfirmationPage()
                     },
                     (err) => {
-                        self.dismissLoading();
-                        self.handleError(err);
+                        loading.dismiss()
+                        self.handleError(err)
                     }
                 )
             }
@@ -49,15 +45,15 @@ export class StorePage {
     }
 
     onPageWillEnter() {
-        this.presentLoading();
+        let loading = this.presentLoading();
         this.storeService.getStore(this.storeId).subscribe(
             (store) => {
                 this.store = store;
-                this.dismissLoading();
+                loading.dismiss();
             },
             (err) => {
                 this.handleError(err);
-                this.dismissLoading();
+                loading.dismiss();
             }
         );
     }
@@ -83,11 +79,15 @@ export class StorePage {
     }
 
     presentLoading() {
-        this.nav.present(this.loading);
+        let loading = Loading.create({
+            content: "Please wait..."
+        });
+        this.nav.present(loading);
+        return loading;
     }
 
-    dismissLoading() {
-        this.loading.dismiss();
+    dismissLoading(loading) {
+        loading.dismiss();
     }
 
     goToConfirmationPage() {
