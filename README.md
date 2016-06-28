@@ -2,7 +2,7 @@
 The mobile face for Tote.
 Clutch is a mobile store embedded within an app.
 
-![alt text](https://raw.githubusercontent.com/cgil/clutch/master/www/img/inapp-store.png =100x "In-app store")
+![inapp-store](https://raw.githubusercontent.com/cgil/clutch/master/www/img/inapp-store.png =100x)
 
 
 # Installation and Running
