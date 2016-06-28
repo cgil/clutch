@@ -20,3 +20,6 @@ Secure checkout is down via Stripe.
 
 # Tech stack
 This is built with ionic 2, which is a framework ontop of angular 2 for creating mobile hybrid apps.
+
+# Configuration
+Update config.js with production and development details.
